@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+          #head{
+            border: 1px solid white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border-radius: 5px;
+        }
+        #head>img{
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body onload="playvideo()">
+    <div id="head">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Youtube_2018.gif" alt="">
+        
+    </div>
+    <iframe id="frame" width="560" height="315"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</body>
+</html>
+
+<script>
+    let playvideo = () => {
+        let video = JSON.parse(localStorage.getItem("video"));
+        console.log(video);
+        let id = video.id.videoId;
+        let screen = document.querySelector("#frame");
+        screen.src = `https://www.youtube.com/embed/${id}`
+    }
+</script>
