@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #head{
+            border: 1px solid white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border-radius: 5px;
+        }
+        #head>img{
+            width: 100px;
+            height: 50px;
+        }
+        #search{
+            border: 1px solid white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            margin-left: 400px;
+            padding: 10px 200px 10px 60px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        #results{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        #results>div{
+            border: 1px solid white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border-radius: 10px;
+        }
+        #results>div>img{
+            width: 365px;
+            border-radius: 10px;
+        }
+        #filter{
+            border: 1px solid white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 5px 5px 5px 5px;
+          
+        }
+    </style>
+</head>
+<body>
+    <div id="head">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Youtube_2018.gif" alt="">
+      <input type="text" placeholder="Search" id="search" oninput="search()">
+      <input type="text" placeholder="Filter by videoId" id="filter" oninput="filter()"/>
+    </div>
+    <div id="results">
+
+    </div>
+</body>
+</html>
+
+<script>
+ const api_key = "AIzaSyCfCEnkZ8O1Ne9nnM54whJy4gF-6ZXnFcM"
+ 
+let q="";
+ let search = async () => {
+    let query = document.querySelector("#search").value
+    console.log(query);
+    data = await getdata(query);
+    q = query;
+    append(data);
+ }
+
+
+getdata = async (query) =>{
+    
+    console.log(query);
+    let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${query}&key=${api_key}`
+    console.log(url);
+    let res = await fetch(url);
+    console.log(res);
+    let data = await res.json();
+
+    console.log(data);
+    
+
+   console.log(data.items);
+   console.log(data.items[0]);
+   
+    return data.items;
+
+   
+    }
+    
+    let append = (data) => {
+        let container = document.querySelector("#results");
+        container.innerHTML = null;
+
+        data.forEach(function(el){
+          
+          d1 = document.createElement("img")
+          d1.src= el.snippet.thumbnails.medium.url
+
+          d2 = document.createElement("h3")
+          d2.innerText = el.snippet.title
+
+          div = document.createElement("div")
+          div.setAttribute("class","video")
+          div.onclick = () => {
+            savevideo(el);
+          }
+          
+
+          div.append(d1,d2)
+          container.append(div)
+        })
+        
+    }
+
+    function savevideo(data){
+        localStorage.setItem("video",JSON.stringify(data));
+        window.location.href = "video.html"
+    }
+
+
+    
+
+    let filter = async () => {
+        let x = document.querySelector("#filter").value
+        console.log(x);
+        let data = await getdata(q);
+        data = data.filter((el) => {
+        return el.id.videoId ===x;
+        });
+        append(data);
+    }
+
+
+    
+    
+    
+</script>
